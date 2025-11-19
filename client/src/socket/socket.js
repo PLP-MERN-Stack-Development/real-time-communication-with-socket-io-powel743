@@ -33,6 +33,10 @@ export const useSocket = () => {
   // Disconnect from socket server
   const disconnect = () => {
     socket.disconnect();
+    setMessages([]);     
+    setUsers([]);        
+    setTypingUsers([]);  
+    setLastMessage(null);
   };
 
   // Send a message

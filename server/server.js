@@ -78,12 +78,16 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Handle private messages
+  // --- FIXED PRIVATE MESSAGE SECTION ---
   socket.on('private_message', ({ to, message }) => {
+    // 1. Define recipientName FIRST
+    const recipientName = users[to]?.username;
+
     const messageData = {
       id: Date.now(),
       sender: users[socket.id]?.username || 'Anonymous',
       senderId: socket.id,
+      to: recipientName, // 2. Now safe to use
       message,
       timestamp: new Date().toISOString(),
       isPrivate: true,
@@ -92,6 +96,7 @@ io.on('connection', (socket) => {
     socket.to(to).emit('private_message', messageData);
     socket.emit('private_message', messageData);
   });
+  // -------------------------------------
 
   // Handle disconnection
   socket.on('disconnect', () => {
@@ -129,4 +134,4 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-module.exports = { app, server, io }; 
+module.exports = { app, server, io };
